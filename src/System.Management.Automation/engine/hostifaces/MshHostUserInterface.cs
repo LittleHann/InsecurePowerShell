@@ -909,69 +909,14 @@ namespace System.Management.Automation.Host
         /// </summary>
         internal static TranscriptionOption GetSystemTranscriptOption(TranscriptionOption currentTranscript)
         {
-            Dictionary<string, object> groupPolicySettings = Utils.GetGroupPolicySetting("Transcription", Utils.RegLocalMachineThenCurrentUser);
-
-            if (groupPolicySettings != null)
-            {
-                // If we have an existing system transcript for this process, use that.
-                // Otherwise, populate the static variable with the result of the group policy setting.
-                //
-                // This way, multiple runspaces opened by the same process will share the same transcript.
-                lock (s_systemTranscriptLock)
-                {
-                    if (systemTranscript == null)
-                    {
-                        systemTranscript = PSHostUserInterface.GetTranscriptOptionFromSettings(groupPolicySettings, currentTranscript);
-                    }
-                }
-            }
-
-            return systemTranscript;
+            return null;
         }
         internal static TranscriptionOption systemTranscript = null;
         private static Object s_systemTranscriptLock = new Object();
 
         private static TranscriptionOption GetTranscriptOptionFromSettings(Dictionary<string, object> settings, TranscriptionOption currentTranscript)
         {
-            TranscriptionOption transcript = null;
-
-            object keyValue = null;
-            if (settings.TryGetValue("EnableTranscripting", out keyValue))
-            {
-                if (String.Equals(keyValue.ToString(), "1", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (currentTranscript != null)
-                    {
-                        return currentTranscript;
-                    }
-
-                    transcript = new TranscriptionOption();
-
-                    // Pull out the transcript path
-                    object outputDirectoryValue = null;
-                    if (settings.TryGetValue("OutputDirectory", out outputDirectoryValue))
-                    {
-                        string outputDirectoryString = outputDirectoryValue as string;
-                        transcript.Path = GetTranscriptPath(outputDirectoryString, true);
-                    }
-                    else
-                    {
-                        transcript.Path = GetTranscriptPath();
-                    }
-
-                    // Pull out the "enable invocation header"
-                    object enableInvocationHeaderValue = null;
-                    if (settings.TryGetValue("EnableInvocationHeader", out enableInvocationHeaderValue))
-                    {
-                        if (String.Equals("1", enableInvocationHeaderValue.ToString(), StringComparison.OrdinalIgnoreCase))
-                        {
-                            transcript.IncludeInvocationHeader = true;
-                        }
-                    }
-                }
-            }
-
-            return transcript;
+            return null;
         }
 
         internal static string GetTranscriptPath()

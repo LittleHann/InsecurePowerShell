@@ -4715,31 +4715,7 @@ namespace Microsoft.PowerShell.Commands
 
         private void SetModuleLoggingInformation(ModuleLoggingGroupPolicyStatus status, PSModuleInfo m, IEnumerable<string> moduleNames)
         {
-            // TODO, insivara : What happens when Enabled but none of the other options (DefaultSystemModules, NonDefaultSystemModule, NonSystemModule, SpecificModules) are set?
-            // After input from GP team for this behavior, need to revisit the commented out part
-            //if ((status & ModuleLoggingGroupPolicyStatus.Enabled) != 0)
-            //{
-
-            //}
-
-            if (((status & ModuleLoggingGroupPolicyStatus.Enabled) != 0) && moduleNames != null)
-            {
-                foreach (string currentGPModuleName in moduleNames)
-                {
-                    if (string.Equals(m.Name, currentGPModuleName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        m.LogPipelineExecutionDetails = true;
-                    }
-                    else if (WildcardPattern.ContainsWildcardCharacters(currentGPModuleName))
-                    {
-                        WildcardPattern wildcard = WildcardPattern.Get(currentGPModuleName, WildcardOptions.IgnoreCase);
-                        if (wildcard.IsMatch(m.Name))
-                        {
-                            m.LogPipelineExecutionDetails = true;
-                        }
-                    }
-                }
-            }
+            
         }
 
         /// <summary>
@@ -4748,33 +4724,7 @@ namespace Microsoft.PowerShell.Commands
         internal static ModuleLoggingGroupPolicyStatus GetModuleLoggingInformation(out IEnumerable<string> moduleNames)
         {
             moduleNames = null;
-            ModuleLoggingGroupPolicyStatus status = ModuleLoggingGroupPolicyStatus.Undefined;
-            Dictionary<string, object> groupPolicySettings = Utils.GetGroupPolicySetting("ModuleLogging", Utils.RegLocalMachineThenCurrentUser);
-
-            if (groupPolicySettings != null)
-            {
-                object enableModuleLoggingValue = null;
-                if (groupPolicySettings.TryGetValue("EnableModuleLogging", out enableModuleLoggingValue))
-                {
-                    if (String.Equals(enableModuleLoggingValue.ToString(), "0", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return ModuleLoggingGroupPolicyStatus.Disabled;
-                    }
-
-                    if (String.Equals(enableModuleLoggingValue.ToString(), "1", StringComparison.OrdinalIgnoreCase))
-                    {
-                        status = ModuleLoggingGroupPolicyStatus.Enabled;
-
-                        object moduleNamesValue = null;
-                        if (groupPolicySettings.TryGetValue("ModuleNames", out moduleNamesValue))
-                        {
-                            moduleNames = new List<String>((string[])moduleNamesValue);
-                        }
-                    }
-                }
-            }
-
-            return status;
+            return ModuleLoggingGroupPolicyStatus.Disabled;
         }
 
         /// <summary>

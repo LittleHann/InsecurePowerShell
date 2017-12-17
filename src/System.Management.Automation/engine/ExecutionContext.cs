@@ -314,27 +314,7 @@ namespace System.Management.Automation
             }
             set
             {
-                // If we're moving to ConstrainedLanguage, invalidate the binding
-                // caches. After that, the binding rules encode the language mode.
-                if (value == PSLanguageMode.ConstrainedLanguage)
-                {
-                    ExecutionContext.HasEverUsedConstrainedLanguage = true;
-                    HasRunspaceEverUsedConstrainedLanguageMode = true;
-
-                    System.Management.Automation.Language.PSSetMemberBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSInvokeMemberBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSConvertBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSBinaryOperationBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSGetIndexBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSSetIndexBinder.InvalidateCache();
-                    System.Management.Automation.Language.PSCreateInstanceBinder.InvalidateCache();
-                }
-
-                // Conversion caches don't have version info / binding rules, so must be
-                // cleared every time.
-                LanguagePrimitives.RebuildConversionCache();
-
-                _languageMode = value;
+                _languageMode = PSLanguageMode.FullLanguage;
             }
         }
         private PSLanguageMode _languageMode = PSLanguageMode.FullLanguage;
@@ -342,13 +322,13 @@ namespace System.Management.Automation
         /// <summary>
         ///  True if this runspace has ever used constrained language mode
         /// </summary>
-        internal bool HasRunspaceEverUsedConstrainedLanguageMode { get; private set; }
+        internal bool HasRunspaceEverUsedConstrainedLanguageMode { get; set; }
 
         /// <summary>
         /// True if we've ever used ConstrainedLanguage. If this is the case, then the binding restrictions
         /// need to also validate against the language mode.
         /// </summary>
-        internal static bool HasEverUsedConstrainedLanguage { get; private set; }
+        internal static bool HasEverUsedConstrainedLanguage { get; set; }
 
         /// <summary>
         /// If true the PowerShell debugger will use FullLanguage mode, otherwise it will use the current language mode

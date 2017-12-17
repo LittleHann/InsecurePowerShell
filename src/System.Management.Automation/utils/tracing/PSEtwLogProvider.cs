@@ -40,7 +40,7 @@ namespace System.Management.Automation.Tracing
         /// </remarks>
         internal bool IsEnabled(PSLevel level, PSKeyword keywords)
         {
-            return etwProvider.IsEnabled((byte)level, (long)keywords);
+            return false;
         }
 
         /// <summary>
