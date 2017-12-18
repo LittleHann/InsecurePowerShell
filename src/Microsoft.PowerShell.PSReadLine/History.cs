@@ -47,7 +47,7 @@ namespace Microsoft.PowerShell
 
         private string MaybeAddToHistory(string result, List<EditItem> edits, int undoEditIndex, bool readingHistoryFile, bool fromDifferentSession)
         {
-            bool addToHistory = !string.IsNullOrWhiteSpace(result) && ((Options.AddToHistoryHandler == null) || Options.AddToHistoryHandler(result));
+            bool addToHistory = false;
             if (addToHistory)
             {
                 _history.Enqueue(new HistoryItem

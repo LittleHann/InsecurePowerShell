@@ -248,10 +248,6 @@ namespace Microsoft.PowerShell
                     // Send startup telemetry for ConsoleHost startup
                     ApplicationInsightsTelemetry.SendPSCoreStartupTelemetry();
 
-                    ClrFacade.StartProfileOptimization(
-                        s_theConsoleHost.LoadPSReadline()
-                            ? "StartupProfileData-Interactive"
-                            : "StartupProfileData-NonInteractive");
                     exitCode = s_theConsoleHost.Run(s_cpp, false);
                 }
             }
